@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: green-deploy
+  labels:
+    app: "wsk-eks-ng-app"
+  namespace: wsk25
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      app: "wsk-eks-ng-app"
+  template:
+    metadata:
+      labels:
+        app: "wsk-eks-ng-app"
+    spec:
+      containers:
+        - name: green
+          image: 586639730662.dkr.ecr.ap-northeast-2.amazonaws.com/wsk1/grapp:latest
+          envFrom:
+            - secretRef:
+                name: secret
+
+      tolerations:
+        - key: "app"
+          operator: "Equal"
+          value: "app"
+          effect: "NoSchedule"
